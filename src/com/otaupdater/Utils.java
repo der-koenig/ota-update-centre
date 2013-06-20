@@ -37,6 +37,7 @@ import android.os.Build;
 
 public class Utils {
     private static String cachedRomID = null;
+    private static String cachedVersionSpecificRomID = null;
     private static Date cachedOtaDate = null;
     private static String cachedOtaVer = null;
     private static String cachedOSSdPath = null;
@@ -64,6 +65,13 @@ public class Utils {
             cachedRomID = getprop(Config.OTA_ID_PROP);
         }
         return cachedRomID;
+    }
+    
+    public static String getVersionSpecificRomID() {
+        if (cachedVersionSpecificRomID == null) {
+            cachedVersionSpecificRomID = getprop(Config.OTA_ID_PROP) + "-" + getOtaVersion();
+        }
+        return cachedVersionSpecificRomID;
     }
     
     public static String getOSSdPath() {

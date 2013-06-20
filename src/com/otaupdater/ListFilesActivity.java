@@ -293,8 +293,9 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
                                     os.writeBytes("exit\n");
                                     os.flush();
                                     p.waitFor();
-                                } catch (Exception e) {
+                                } catch (Exception e2) {
                                     e.printStackTrace();
+                                }
                             }
                         }
                     });

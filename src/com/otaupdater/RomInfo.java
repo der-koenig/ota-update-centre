@@ -23,9 +23,12 @@ import android.content.Intent;
 public class RomInfo {
     public String romName;
     public String version;
+    public String incrementalSourceVersion;
     public String changelog;
     public String url;
+    public String incrementalUrl;
     public String md5;
+    public String incrementalMd5;
     public Date date;
 
     public RomInfo(String romName, String version, String changelog, String downurl, String md5, Date date) {
@@ -37,14 +40,30 @@ public class RomInfo {
         this.date = date;
     }
 
+    public void setIncrementalInfo(String incrementalSourceVersion, String incrementalUrl, String incrementalMd5) {
+        this.incrementalSourceVersion = incrementalSourceVersion;
+        this.incrementalUrl = incrementalUrl;
+        this.incrementalMd5 = incrementalMd5;
+    }
+
     public static RomInfo fromIntent(Intent i) {
-        return new RomInfo(
+        RomInfo info = new RomInfo(
                 i.getStringExtra("info_rom"),
                 i.getStringExtra("info_version"),
                 i.getStringExtra("info_changelog"),
                 i.getStringExtra("info_url"),
                 i.getStringExtra("info_md5"),
                 Utils.parseDate(i.getStringExtra("info_date")));
+
+        String incrementalSourceVersion = i.getStringExtra("info_incremental_source_version");
+        String incrementalUrl = i.getStringExtra("info_incremental_url");
+        String incrementalMd5 = i.getStringExtra("info_incremental_md5");
+
+        if (incrementalSourceVersion != null && incrementalUrl != null && incrementalMd5 != null) {
+            info.setIncrementalInfo(incrementalSourceVersion, incrementalUrl, incrementalMd5);
+        }
+
+        return info;
     }
 
     public void addToIntent(Intent i) {
@@ -54,5 +73,13 @@ public class RomInfo {
         i.putExtra("info_url", url);
         i.putExtra("info_md5", md5);
         i.putExtra("info_date", Utils.formatDate(date));
+
+        i.putExtra("info_incremental_source_version_incremental", incrementalSourceVersion);
+        i.putExtra("info_incremental_url", incrementalUrl);
+        i.putExtra("info_incremental_md5", incrementalMd5);
+    }
+
+    public boolean hasIncrementalUpdate() {
+        return incrementalSourceVersion != null && incrementalUrl != null && incrementalMd5 != null;
     }
 }

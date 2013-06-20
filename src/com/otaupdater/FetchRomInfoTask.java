@@ -62,36 +62,16 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
             return null;
         }
 
+        RomInfo romInfo = null;
+
+        ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
+        params.add(new BasicNameValuePair("rom", Utils.getRomID()));
+
         try {
-            ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-            params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
-            params.add(new BasicNameValuePair("rom", Utils.getRomID()));
-
-            HttpClient client = new DefaultHttpClient();
-            HttpGet get = new HttpGet(Config.PULL_URL + "?" + URLEncodedUtils.format(params, "UTF-8"));
-            HttpResponse r = client.execute(get);
-            int status = r.getStatusLine().getStatusCode();
-            HttpEntity e = r.getEntity();
-            if (status == 200) {
-                String data = EntityUtils.toString(e);
-                JSONObject json = new JSONObject(data);
-
-                if (json.has("error")) {
-                    Log.e("OTA::Fetch", json.getString("error"));
-                    error = json.getString("error");
-                    return null;
-                }
-
-                return new RomInfo(
-                        json.getString("rom"),
-                        json.getString("version"),
-                        json.getString("changelog"),
-                        json.getString("url"),
-                        json.getString("md5"),
-                        Utils.parseDate(json.getString("date")));
-            } else {
-                if (e != null) e.consumeContent();
-                error = "Server responded with error " + status;
+            error = null;
+            romInfo = query(params);
+            if (romInfo == null) {
                 return null;
             }
         } catch (Exception e) {
@@ -99,7 +79,55 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
             error = e.getMessage();
         }
 
-        return null;
+        params = new ArrayList<BasicNameValuePair>();
+        params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
+        params.add(new BasicNameValuePair("rom", Utils.getVersionSpecificRomID()));
+
+        try {
+            error = null;
+            RomInfo incrementalRomInfo = query(params);
+            if (incrementalRomInfo != null) {
+                romInfo.setIncrementalInfo(
+                        Utils.getOtaVersion(),
+                        incrementalRomInfo.url,
+                        incrementalRomInfo.md5);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            error = e.getMessage();
+        }
+
+        return romInfo;
+    }
+
+    private RomInfo query(ArrayList<BasicNameValuePair> params) throws java.io.IOException, org.json.JSONException {
+        HttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet(Config.PULL_URL + "?" + URLEncodedUtils.format(params, "UTF-8"));
+        HttpResponse r = client.execute(get);
+        int status = r.getStatusLine().getStatusCode();
+        HttpEntity e = r.getEntity();
+        if (status == 200) {
+            String data = EntityUtils.toString(e);
+            JSONObject json = new JSONObject(data);
+
+            if (json.has("error")) {
+                Log.e("OTA::Fetch", json.getString("error"));
+                error = json.getString("error");
+                return null;
+            }
+
+            return new RomInfo(
+                    json.getString("rom"),
+                    json.getString("version"),
+                    json.getString("changelog"),
+                    json.getString("url"),
+                    json.getString("md5"),
+                    Utils.parseDate(json.getString("date")));
+        } else {
+            if (e != null) e.consumeContent();
+            error = "Server responded with error " + status;
+            return null;
+        }
     }
 
     @Override

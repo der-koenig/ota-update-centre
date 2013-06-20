@@ -84,6 +84,10 @@ public class Config {
                     PREFS.getString("info_url", null),
                     PREFS.getString("info_md5", null),
                     Utils.parseDate(PREFS.getString("info_date", null)));
+
+            storedUpdate.setIncrementalInfo(PREFS.getString("info_incremental_source_version", null),
+                    PREFS.getString("info_incremental_url", null),
+                    PREFS.getString("info_incremental_md5", null));
         }
 
         try {
@@ -175,6 +179,11 @@ public class Config {
             editor.putString("info_url", info.url);
             editor.putString("info_md5", info.md5);
             editor.putString("info_date", Utils.formatDate(info.date));
+
+            editor.putString("info_incremental_source_version", info.incrementalSourceVersion);
+            editor.putString("info_incremental_url", info.incrementalUrl);
+            editor.putString("info_incremental_md5", info.incrementalMd5);
+
             editor.commit();
         }
     }
@@ -188,6 +197,11 @@ public class Config {
             editor.remove("info_url");
             editor.remove("info_md5");
             editor.remove("info_date");
+
+            editor.remove("info_incremental_source_version");
+            editor.remove("info_incremental_url");
+            editor.remove("info_incremental_md5");
+
             editor.commit();
         }
     }

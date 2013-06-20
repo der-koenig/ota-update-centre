@@ -83,7 +83,7 @@
     <string name="main_avail_updates">Available Updates</string>
     <string name="main_updates_none">No updates available</string>
     <string name="main_updates_error">Error fetching update info: %1$s</string>
-    <string name="main_updates_new">New updates: %1$s (version %2$s)</string>
+    <string name="main_updates_new">%1$s (version %2$s)</string>
 
     <string name="contributors_title">Contributors</string>
     <string name="contributors_error">Error loading contributors file</string>

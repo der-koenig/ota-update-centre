@@ -54,6 +54,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.google.android.gcm.GCMRegistrar;
@@ -345,6 +349,7 @@ public class OTAUpdaterActivity extends PreferenceActivity {
                     availUpdatePref.setSummary(getString(R.string.main_updates_error, "Unknown error"));
                     Toast.makeText(OTAUpdaterActivity.this, R.string.toast_fetch_error, Toast.LENGTH_SHORT).show();
                 } else if (Utils.isUpdate(info)) {
+                    availUpdatePref.setSummary(getString(R.string.main_updates_new, info.romName, info.version));
                     showUpdateDialog(info);
                 } else {
                     availUpdatePref.setSummary(R.string.main_updates_none);
@@ -362,15 +367,30 @@ public class OTAUpdaterActivity extends PreferenceActivity {
     }
 
     private void showUpdateDialog(final RomInfo info) {
+        View checkBoxView = View.inflate(this, R.layout.checkbox, null);
+        final CheckBox checkBox = (CheckBox) checkBoxView.findViewById(R.id.checkbox);
+        checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            }
+        });
+        checkBox.setText("Incremental update");
+        if (!info.hasIncrementalUpdate()) {
+            checkBox.setChecked(false);
+            checkBox.setEnabled(false);
+        }
+
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle(R.string.alert_update_title);
         alert.setMessage(getString(R.string.alert_update_to, info.romName, info.version));
-        availUpdatePref.setSummary(getString(R.string.main_updates_new, info.romName, info.version));
+        alert.setView(checkBoxView);
 
         alert.setPositiveButton(R.string.alert_download, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
+
+                final boolean useIncrementalUpdate = checkBox.isChecked();
 
                 final ProgressDialog progressDialog = new ProgressDialog(OTAUpdaterActivity.this);
                 progressDialog.setTitle(R.string.alert_downloading);
@@ -379,8 +399,9 @@ public class OTAUpdaterActivity extends PreferenceActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.setProgress(0);
 
-                final File file = new File(Config.DL_PATH_FILE, Slugify.slugify(info.romName + "_" + info.version) + ".zip");
-                dlTask = new DownloadTask(progressDialog, info, file);
+                final File file = new File(Config.DL_PATH_FILE, Slugify.slugify(info.romName + "_" + info.version +
+                        "-" + (useIncrementalUpdate ? "incremental" : "full")) + ".zip");
+                dlTask = new DownloadTask(progressDialog, info, file, useIncrementalUpdate);
 
                 progressDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(R.string.alert_cancel), new DialogInterface.OnClickListener() {
                     @Override
@@ -411,14 +432,16 @@ public class OTAUpdaterActivity extends PreferenceActivity {
         private RomInfo info;
         private File destFile;
         private final WakeLock wl;
+        private boolean useIncrementalUpdate = false;
 
         private boolean done = false;
 
-        public DownloadTask(ProgressDialog dialog, RomInfo info, File destFile) {
+        public DownloadTask(ProgressDialog dialog, RomInfo info, File destFile, boolean useIncrementalUpdate) {
             this.attach(dialog);
 
             this.info = info;
             this.destFile = destFile;
+            this.useIncrementalUpdate = useIncrementalUpdate;
 
             PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
             wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, OTAUpdaterActivity.class.getName());
@@ -466,7 +489,7 @@ public class OTAUpdaterActivity extends PreferenceActivity {
                     }
                     String oldMd5 = Utils.byteArrToStr(digest.digest());
                     Log.v("OTA::Download", "old zip md5: " + oldMd5);
-                    if (!info.md5.equalsIgnoreCase(oldMd5)) {
+                    if (!oldMd5.equalsIgnoreCase(useIncrementalUpdate ? info.incrementalMd5 : info.md5)) {
                         destFile.delete();
                     } else {
                         return 0;
@@ -485,7 +508,7 @@ public class OTAUpdaterActivity extends PreferenceActivity {
             InputStream is = null;
             OutputStream os = null;
             try {
-                URL getUrl = new URL(info.url);
+                URL getUrl = new URL(useIncrementalUpdate ? info.incrementalUrl : info.url);
                 Log.v("OTA::Download", "downloading from: " + getUrl);
                 Log.d("OTA::Download", "downloading to: " + destFile.getAbsolutePath());
 
@@ -522,7 +545,7 @@ public class OTAUpdaterActivity extends PreferenceActivity {
 
 		    Log.v("OTA::Download", "Timer Complete, Continuing with File Download");
 
-		    getUrl = new URL(info.url);
+		    getUrl = new URL(useIncrementalUpdate ? info.incrementalUrl : info.url);
 		    conn = getUrl.openConnection();
 
                 }
@@ -565,8 +588,9 @@ public class OTAUpdaterActivity extends PreferenceActivity {
 
                 String dlMd5 = Utils.byteArrToStr(digest.digest());
                 Log.v("OTA::Download", "downloaded md5: " + dlMd5);
-                if (!info.md5.equalsIgnoreCase(dlMd5)) {
-                    Log.w("OTA::Download", "downloaded md5 doesn't match " + info.md5);
+                String md5ToCheck = (useIncrementalUpdate ? info.incrementalMd5 : info.md5);
+                if (!md5ToCheck.equalsIgnoreCase(dlMd5)) {
+                    Log.w("OTA::Download", "downloaded md5 doesn't match " + md5ToCheck);
                     destFile.delete();
                     return 1;
                 }
