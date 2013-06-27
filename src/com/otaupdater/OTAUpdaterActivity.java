@@ -31,6 +31,7 @@ import java.text.Normalizer.Form;
 import java.util.Date;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -211,6 +212,9 @@ public class OTAUpdaterActivity extends PreferenceActivity {
                 }
             }
         }
+
+        final ActionBar bar = getActionBar();
+        bar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -334,6 +338,9 @@ public class OTAUpdaterActivity extends PreferenceActivity {
         case R.id.refresh:
             checkForRomUpdates();
             break;
+        case android.R.id.home:
+            OTAUpdaterActivity.this.onBackPressed();
+            return true;
         }
         return true;
     }
