@@ -243,40 +243,28 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-                                ((PowerManager) ctx.getSystemService(POWER_SERVICE)).reboot("recovery");
-                            } catch (Exception e) {
+                                String name = file.getName();
+
+                                Process p = Runtime.getRuntime().exec("su");
+                                DataOutputStream os = new DataOutputStream(p.getOutputStream());
+                                os.writeBytes("rm -f /cache/recovery/command\n");
+                                os.writeBytes("rm -f /cache/recovery/extendedcommand\n");
+
+                                if (selectedOpts[0]) {
+                                    os.writeBytes("echo '--nandroid' >> /cache/recovery/command\n");
+                                }
+                                if (selectedOpts[1]) {
+                                    os.writeBytes("echo '--wipe_data' >> /cache/recovery/command\n");
+                                }
+                                if (selectedOpts[2]) {
+                                    os.writeBytes("echo '--wipe_cache' >> /cache/recovery/command\n");
+                                }
+
+                                os.writeBytes("echo '--update_package=/" + Utils.getRcvrySdPath() + "/OTA-Updater/download/" + name + "' >> /cache/recovery/command\n");
                                 try {
+                                    ((PowerManager) ctx.getSystemService(POWER_SERVICE)).reboot("recovery");
+                                } catch (Exception e) {
                                     e.printStackTrace();
-                                    String name = file.getName();
-
-                                    Process p = Runtime.getRuntime().exec("su");
-                                    DataOutputStream os = new DataOutputStream(p.getOutputStream());
-                                    os.writeBytes("rm -f /cache/recovery/command\n");
-                                    os.writeBytes("rm -f /cache/recovery/extendedcommand\n");
-//                                    if (selectedOpts[0]) {
-//                                        os.writeBytes("echo 'backup_rom /sdcard/clockwordmod/backup/" +
-//                                                new SimpleDateFormat("yyyy-MM-dd_HH.mm").format(new Date()) +
-//                                                "' >> /cache/recovery/extendedcommand\n");
-//                                    }
-                                    if (Build.MANUFACTURER.toLowerCase().contains("sony")) {
-                                        if (selectedOpts[0]) {
-                                            os.writeBytes("echo 'format(\"/data\");' >> /cache/recovery/extendedcommand\n");
-                                        }
-                                        if (selectedOpts[1]) {
-                                            os.writeBytes("echo 'format(\"/cache\");' >> /cache/recovery/extendedcommand\n");
-                                        }
-
-                                        os.writeBytes("echo 'install_zip(\"/" + Utils.getRcvrySdPath() + "/OTA-Updater/download/" + name + "\");' >> /cache/recovery/extendedcommand\n");
-                                    } else {
-                                        if (selectedOpts[0]) {
-                                            os.writeBytes("echo '--wipe_data' >> /cache/recovery/command\n");
-                                        }
-                                        if (selectedOpts[1]) {
-                                            os.writeBytes("echo '--wipe_cache' >> /cache/recovery/command\n");
-                                        }
-
-                                        os.writeBytes("echo '--update_package=/" + Utils.getRcvrySdPath() + "/OTA-Updater/download/" + name + "' >> /cache/recovery/command\n");
-                                    }
 
                                     os.writeBytes("sync\n");
 
@@ -293,9 +281,9 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
                                     os.writeBytes("exit\n");
                                     os.flush();
                                     p.waitFor();
-                                } catch (Exception e2) {
-                                    e.printStackTrace();
                                 }
+                            } catch (Exception e2) {
+                                e.printStackTrace();
                             }
                         }
                     });
