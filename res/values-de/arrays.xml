@@ -22,7 +22,7 @@
         <item>Löschen</item>
     </string-array>
     <string-array name="install_options">
-        <item>Daten löschen</item>
+        <item>Benutzerdaten löschen</item>
         <item>Cache löschen</item>
     </string-array>
     <string-array name="file_ages">
