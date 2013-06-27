@@ -36,14 +36,24 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
     private RomInfoListener callback = null;
     private Context context = null;
     private String error = null;
+    private RomInfo fullUpdate;
+    private boolean checkForIncrementalUpdateOnly = false;
 
     public FetchRomInfoTask(Context ctx) {
         this(ctx, null);
     }
 
     public FetchRomInfoTask(Context ctx, RomInfoListener callback) {
+        this(ctx, callback, null);
+    }
+
+    public FetchRomInfoTask(Context ctx, RomInfoListener callback, RomInfo fullUpdate) {
         this.context = ctx;
         this.callback = callback;
+        if (fullUpdate != null) {
+            this.fullUpdate = fullUpdate;
+            this.checkForIncrementalUpdateOnly = true;
+        }
     }
 
     @Override
@@ -62,21 +72,32 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
             return null;
         }
 
+        ArrayList<BasicNameValuePair> params = null;
         RomInfo romInfo = null;
+        RomInfo incrementalRomInfo = null;
 
-        ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-        params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
-        params.add(new BasicNameValuePair("rom", Utils.getRomID()));
-
-        try {
-            error = null;
-            romInfo = query(params);
-            if (romInfo == null) {
-                return null;
+        if (!checkForIncrementalUpdateOnly) {
+            params = new ArrayList<BasicNameValuePair>();
+            params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
+            params.add(new BasicNameValuePair("rom", Utils.getRomID()));
+    
+            try {
+                error = null;
+                romInfo = query(params);
+                if (romInfo == null) {
+                    return null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                error = e.getMessage();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            error = e.getMessage();
+        } else {
+            if (fullUpdate == null) {
+                Log.w("OTA::Fetch", "Full update is null, not checking for incremental update.");
+                return null;
+            } else {
+                romInfo = fullUpdate;
+            }
         }
 
         params = new ArrayList<BasicNameValuePair>();
@@ -85,12 +106,23 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
 
         try {
             error = null;
-            RomInfo incrementalRomInfo = query(params);
-            if (incrementalRomInfo != null) {
-                romInfo.setIncrementalInfo(
-                        Utils.getOtaVersion(),
-                        incrementalRomInfo.url,
-                        incrementalRomInfo.md5);
+            incrementalRomInfo = query(params);
+            if (incrementalRomInfo != null && romInfo != null) {
+                if (incrementalRomInfo.version.equals(romInfo.version)) {
+                    romInfo.setIncrementalInfo(
+                            Utils.getOtaVersion(),
+                            incrementalRomInfo.url,
+                            incrementalRomInfo.md5);
+                    return romInfo;
+                } else {
+                    Log.w("OTA::Fetch", "Incremental update version does not match full update, ignoring.");
+                    if (checkForIncrementalUpdateOnly)
+                        return null;
+                    else 
+                        return romInfo;
+                }
+            } else if (checkForIncrementalUpdateOnly) {
+                return null;
             }
         } catch (Exception e) {
             e.printStackTrace();

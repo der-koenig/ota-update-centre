@@ -369,13 +369,11 @@ public class OTAUpdaterActivity extends PreferenceActivity {
     private void showUpdateDialog(final RomInfo info) {
         View checkBoxView = View.inflate(this, R.layout.checkbox, null);
         final CheckBox checkBox = (CheckBox) checkBoxView.findViewById(R.id.checkbox);
-        checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            }
-        });
-        checkBox.setText("Incremental update");
-        if (!info.hasIncrementalUpdate()) {
+        checkBox.setText(getString(R.string.alert_update_use_incremental));
+        if (info.hasIncrementalUpdate()) {
+            checkBox.setChecked(true);
+            checkBox.setEnabled(true);
+        } else {
             checkBox.setChecked(false);
             checkBox.setEnabled(false);
         }

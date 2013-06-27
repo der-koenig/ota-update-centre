@@ -40,10 +40,10 @@ public class RomInfo {
         this.date = date;
     }
 
-    public void setIncrementalInfo(String incrementalSourceVersion, String incrementalUrl, String incrementalMd5) {
-        this.incrementalSourceVersion = incrementalSourceVersion;
-        this.incrementalUrl = incrementalUrl;
-        this.incrementalMd5 = incrementalMd5;
+    public void setIncrementalInfo(String sourceVersion, String url, String md5) {
+        this.incrementalSourceVersion = sourceVersion;
+        this.incrementalUrl = url;
+        this.incrementalMd5 = md5;
     }
 
     public static RomInfo fromIntent(Intent i) {
@@ -55,13 +55,10 @@ public class RomInfo {
                 i.getStringExtra("info_md5"),
                 Utils.parseDate(i.getStringExtra("info_date")));
 
-        String incrementalSourceVersion = i.getStringExtra("info_incremental_source_version");
-        String incrementalUrl = i.getStringExtra("info_incremental_url");
-        String incrementalMd5 = i.getStringExtra("info_incremental_md5");
-
-        if (incrementalSourceVersion != null && incrementalUrl != null && incrementalMd5 != null) {
-            info.setIncrementalInfo(incrementalSourceVersion, incrementalUrl, incrementalMd5);
-        }
+        info.setIncrementalInfo(
+                i.getStringExtra("info_incremental_source_version"),
+                i.getStringExtra("info_incremental_url"),
+                i.getStringExtra("info_incremental_md5"));
 
         return info;
     }
@@ -74,7 +71,7 @@ public class RomInfo {
         i.putExtra("info_md5", md5);
         i.putExtra("info_date", Utils.formatDate(date));
 
-        i.putExtra("info_incremental_source_version_incremental", incrementalSourceVersion);
+        i.putExtra("info_incremental_source_version", incrementalSourceVersion);
         i.putExtra("info_incremental_url", incrementalUrl);
         i.putExtra("info_incremental_md5", incrementalMd5);
     }

@@ -31,9 +31,12 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
+import com.otaupdater.FetchRomInfoTask.RomInfoListener;
 
 public class GCMIntentService extends GCMBaseIntentService {
 		
@@ -57,6 +60,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
+        queryIncrementalUpdate(ctx, info);
         cfg.storeUpdate(info);
         if (cfg.getShowNotif()) {
             Log.v("OTA::GCM", "got GCM message");
@@ -64,6 +68,30 @@ public class GCMIntentService extends GCMBaseIntentService {
         } else {
             Log.v("OTA::GCM", "got GCM message, notif not shown");
         }
+    }
+
+    private void queryIncrementalUpdate(Context context, final RomInfo fullUpdate) {
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        final WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, GCMIntentService.class.getName());
+        wl.acquire();
+
+        new FetchRomInfoTask(context, new RomInfoListener() {
+            @Override
+            public void onStartLoading() { }
+            @Override
+            public void onLoaded(RomInfo info) {
+                if (info != null)
+                    fullUpdate.setIncrementalInfo(
+                            info.incrementalSourceVersion,
+                            info.incrementalUrl,
+                            info.incrementalMd5);
+                wl.release();
+            }
+            @Override
+            public void onError(String error) {
+                wl.release();
+            }
+        }, fullUpdate).execute();
     }
 
     @Override
@@ -109,6 +137,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                         json.getString("url"),
                         json.getString("md5"),
                         Utils.parseDate(json.getString("date")));
+                queryIncrementalUpdate(ctx, info);
 
                 final Config cfg = Config.getInstance(getApplicationContext());
                 if (Utils.isUpdate(info)) {
