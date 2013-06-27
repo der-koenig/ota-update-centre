@@ -196,12 +196,15 @@ public class OTAUpdaterActivity extends PreferenceActivity {
                 progressDialog.show();
             } else {
                 Intent i = getIntent();
-                if (i != null && i.getAction().equals(NOTIF_ACTION)) {
-                    if (Utils.dataAvailable(getApplicationContext())) {
-                        dialogFromNotif = true;
-                        showUpdateDialog(RomInfo.fromIntent(i));
-                    } else {
-                        checkOnResume = true;
+                if (i != null) {
+                    String intentAction = i.getAction();
+                    if (intentAction != null && intentAction.equals(NOTIF_ACTION)) {
+                        if (Utils.dataAvailable(getApplicationContext())) {
+                            dialogFromNotif = true;
+                            showUpdateDialog(RomInfo.fromIntent(i));
+                        } else {
+                            checkOnResume = true;
+                        }
                     }
                 } else {
                     checkOnResume = true;
