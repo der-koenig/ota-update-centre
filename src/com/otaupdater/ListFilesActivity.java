@@ -211,7 +211,6 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
         Resources r = ctx.getResources();
         String[] installOpts = r.getStringArray(R.array.install_options);
         final boolean[] selectedOpts = new boolean[installOpts.length];
-        selectedOpts[selectedOpts.length - 1] = true;
 
         AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
         alert.setTitle(R.string.alert_install_title);
