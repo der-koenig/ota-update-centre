@@ -197,15 +197,16 @@ public class OTAUpdaterActivity extends PreferenceActivity {
                 progressDialog.show();
             } else {
                 Intent i = getIntent();
+                String intentAction = null;
                 if (i != null) {
-                    String intentAction = i.getAction();
-                    if (intentAction != null && intentAction.equals(NOTIF_ACTION)) {
-                        if (Utils.dataAvailable(getApplicationContext())) {
-                            dialogFromNotif = true;
-                            showUpdateDialog(RomInfo.fromIntent(i));
-                        } else {
-                            checkOnResume = true;
-                        }
+                    intentAction = i.getAction();
+                }
+                if (intentAction != null && intentAction.equals(NOTIF_ACTION)) {
+                    if (Utils.dataAvailable(getApplicationContext())) {
+                        dialogFromNotif = true;
+                        showUpdateDialog(RomInfo.fromIntent(i));
+                    } else {
+                        checkOnResume = true;
                     }
                 } else {
                     checkOnResume = true;
@@ -245,7 +246,11 @@ public class OTAUpdaterActivity extends PreferenceActivity {
 
                     if (Utils.dataAvailable(getApplicationContext())) {
                         Intent i = getIntent();
-                        if (i.getAction().equals(NOTIF_ACTION)) {
+                        String intentAction = null;
+                        if (i != null) {
+                            intentAction = i.getAction();
+                        }
+                        if (intentAction != null && intentAction.equals(NOTIF_ACTION)) {
                             dialogFromNotif = true;
                             showUpdateDialog(RomInfo.fromIntent(i));
                         } else {
@@ -266,7 +271,11 @@ public class OTAUpdaterActivity extends PreferenceActivity {
         } else if (checkOnResume) {
             if (Utils.dataAvailable(getApplicationContext())) {
                 Intent i = getIntent();
-                if (i.getAction().equals(NOTIF_ACTION)) {
+                String intentAction = null;
+                if (i != null) {
+                    intentAction = i.getAction();
+                }
+                if (intentAction != null && intentAction.equals(NOTIF_ACTION)) {
                     dialogFromNotif = true;
                     showUpdateDialog(RomInfo.fromIntent(i));
                 } else {
