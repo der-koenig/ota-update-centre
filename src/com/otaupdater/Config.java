@@ -204,6 +204,8 @@ public class Config {
     }
 
     public void clearStoredUpdate() {
+        storedUpdate = null;
+
         synchronized (PREFS) {
             SharedPreferences.Editor editor = PREFS.edit();
             editor.remove("info_rom");
