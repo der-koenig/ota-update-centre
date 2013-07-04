@@ -86,4 +86,13 @@
     <string name="display_notifications">Mostrar notificacions</string>
     <string name="notify_default">Notificacions estan actives.</string>
     <string name="notify_false">Notificacions no estan actives.</string>
+    <string name="file_action_install">Instal·lar</string>
+    <string name="file_action_rename">Canviar el nom</string>
+    <string name="file_action_delete">Suprimir</string>
+    <string name="file_age_1week">1 setmana</string>
+    <string name="file_age_2weeks">2 setmanes</string>
+    <string name="file_age_1month">1 mes</string>
+    <string name="file_age_3months">3 mesos</string>
+    <string name="file_age_6months">6 mesos</string>
+    <string name="file_age_1year">1 any</string>
 </resources>

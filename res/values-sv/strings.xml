@@ -80,4 +80,15 @@
     <string name="display_notifications">Visa notifikationer</string>
     <string name="notify_default">Notifikationer är på.</string>
     <string name="notify_false">Notifikationer är av.</string>
+    <string name="file_action_install">Installera</string>
+    <string name="file_action_rename">Byt namn</string>
+    <string name="file_action_delete">Ta bort</string>
+    <string name="install_option_wipe_data">Rensa Data</string>
+    <string name="install_option_wipe_cache">Rensa Cache</string>
+    <string name="file_age_1week">1 vecka</string>
+    <string name="file_age_2weeks">2 veckor</string>
+    <string name="file_age_1month">1 månad</string>
+    <string name="file_age_3months">3 månader</string>
+    <string name="file_age_6months">6 månader</string>
+    <string name="file_age_1year">1 år</string>
 </resources>

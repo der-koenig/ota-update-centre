@@ -86,4 +86,15 @@
     <string name="display_notifications">Vis varsler</string>
     <string name="notify_default">Varsler er aktivert.</string>
     <string name="notify_false">Varsler er deaktivert.</string>
+    <string name="file_action_install">Installer</string>
+    <string name="file_action_rename">Nytt Navn</string>
+    <string name="file_action_delete">Slett</string>
+    <string name="install_option_wipe_data">Fjern Data</string>
+    <string name="install_option_wipe_cache">Fjern Cache</string>
+    <string name="file_age_1week">1 uke</string>
+    <string name="file_age_2weeks">2 uker</string>
+    <string name="file_age_1month">1 måned</string>
+    <string name="file_age_3months">3 måneder</string>
+    <string name="file_age_6months">6 måneder</string>
+    <string name="file_age_1year">1 år</string>
 </resources>

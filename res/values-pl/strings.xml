@@ -86,4 +86,15 @@
     <string name="display_notifications">Pokaż powiadomienia</string>
     <string name="notify_default">Powiadomienia są włączone.</string>
     <string name="notify_false">Powiadomienia są wyłączone.</string>
+    <string name="file_action_install">Instaluj</string>
+    <string name="file_action_rename">Zmień nazwę</string>
+    <string name="file_action_delete">Usuń</string>
+    <string name="install_option_wipe_data">Wyczyść Data</string>
+    <string name="install_option_wipe_cache">Wyczyść Cache</string>
+    <string name="file_age_1week">1 tydzień</string>
+    <string name="file_age_2weeks">2 tygodnie</string>
+    <string name="file_age_1month">1 miesiąc</string>
+    <string name="file_age_3months">3 miesiące</string>
+    <string name="file_age_6months">6 miesięcy</string>
+    <string name="file_age_1year">1 rok</string>
 </resources>

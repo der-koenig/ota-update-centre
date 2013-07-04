@@ -86,4 +86,15 @@
     <string name="display_notifications">إظهار إعلامات</string>
     <string name="notify_default">الإعلامات مفعلة.</string>
     <string name="notify_false">الإعلامات مفعلة.</string>
+    <string name="file_action_install">تثبيت</string>
+    <string name="file_action_rename">إعادة تسمية</string>
+    <string name="file_action_delete">حذف</string>
+    <string name="install_option_wipe_data">مسح البيانات</string>
+    <string name="install_option_wipe_cache">مسح ذاكرة التخزين المؤقت</string>
+    <string name="file_age_1week">أسبوع 1</string>
+    <string name="file_age_2weeks">أسبوعين</string>
+    <string name="file_age_1month">شهر 1</string>
+    <string name="file_age_3months">3 أشهر</string>
+    <string name="file_age_6months">6 أشهر</string>
+    <string name="file_age_1year">1 سنة</string>
 </resources>

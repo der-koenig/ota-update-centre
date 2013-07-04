@@ -86,4 +86,15 @@
     <string name="display_notifications">Rodyti pranešimus</string>
     <string name="notify_default">Pranešimai yra ijungti.</string>
     <string name="notify_false">Pranešimai yra išjungti.</string>
+    <string name="file_action_install">Įdiegti</string>
+    <string name="file_action_rename">Pervadinti</string>
+    <string name="file_action_delete">Naikinti</string>
+    <string name="install_option_wipe_data">Trinti duomenis</string>
+    <string name="install_option_wipe_cache">Trinti \"cache\"</string>
+    <string name="file_age_1week">1 savaite</string>
+    <string name="file_age_2weeks">2 savaites</string>
+    <string name="file_age_1month">1 mėnesis</string>
+    <string name="file_age_3months">3 mėnesiai</string>
+    <string name="file_age_6months">6 mėnesiai</string>
+    <string name="file_age_1year">1 metai</string>
 </resources>

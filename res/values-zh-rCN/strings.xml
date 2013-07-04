@@ -93,4 +93,15 @@ zip文件位于: %1$s\"</string>
     <string name="display_notifications">显示通知</string>
     <string name="notify_default">总在任务栏显示.</string>
     <string name="notify_false">不在任务栏显示.</string>
+    <string name="file_action_install">安装</string>
+    <string name="file_action_rename">改名</string>
+    <string name="file_action_delete">删除</string>
+    <string name="install_option_wipe_data">清理 Data分区</string>
+    <string name="install_option_wipe_cache">清理 Cache分区</string>
+    <string name="file_age_1week">1 周</string>
+    <string name="file_age_2weeks">2 周</string>
+    <string name="file_age_1month">1 月</string>
+    <string name="file_age_3months">3 月</string>
+    <string name="file_age_6months">6 月</string>
+    <string name="file_age_1year">1 年</string>
 </resources>

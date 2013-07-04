@@ -84,4 +84,16 @@
     <string name="display_notifications">Benachrichtigungen anzeigen</string>
     <string name="notify_default">Benachrichtigungen werden angezeigt.</string>
     <string name="notify_false">Benachrichtigungen werden nicht angezeigt.</string>
+    <string name="file_action_install">Installieren</string>
+    <string name="file_action_rename">Umbennenen</string>
+    <string name="file_action_delete">Löschen</string>
+    <string name="install_option_backup">Backup durchführen</string>
+    <string name="install_option_wipe_data">Benutzerdaten löschen</string>
+    <string name="install_option_wipe_cache">Cache löschen</string>
+    <string name="file_age_1week">1 Woche</string>
+    <string name="file_age_2weeks">2 Wochen</string>
+    <string name="file_age_1month">1 Monat</string>
+    <string name="file_age_3months">3 Monate</string>
+    <string name="file_age_6months">6 Monate</string>
+    <string name="file_age_1year">1 Jahr</string>
 </resources>

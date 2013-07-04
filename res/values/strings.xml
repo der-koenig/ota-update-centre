@@ -97,4 +97,42 @@
     <string name="display_notifications">Show Notifications</string>
     <string name="notify_default">Notifications are on.</string>
     <string name="notify_false">Notifications are off.</string>
+
+    <string name="file_action_install">Install</string>
+    <string name="file_action_rename">Rename</string>
+    <string name="file_action_delete">Delete</string>
+    <string name="file_action_verify">Verify signature</string>
+
+    <string-array name="file_actions">
+        <item>@string/file_action_install</item>
+        <item>@string/file_action_rename</item>
+        <item>@string/file_action_delete</item>
+        <item>@string/file_action_verify</item>
+    </string-array>
+    
+    <string name="install_option_backup">Perform backup</string>
+    <string name="install_option_wipe_data">Wipe data</string>
+    <string name="install_option_wipe_cache">Wipe cache</string>
+
+    <string-array name="install_options">
+        <item>@string/install_option_backup</item>
+        <item>@string/install_option_wipe_data</item>
+        <item>@string/install_option_wipe_cache</item>
+    </string-array>
+
+    <string name="file_age_1week">1 week</string>
+    <string name="file_age_2weeks">2 weeks</string>
+    <string name="file_age_1month">1 month</string>
+    <string name="file_age_3months">3 months</string>
+    <string name="file_age_6months">6 months</string>
+    <string name="file_age_1year">1 year</string>
+    
+    <string-array name="file_ages">
+        <item>@string/file_age_1week</item>
+        <item>@string/file_age_2weeks</item>
+        <item>@string/file_age_1month</item>
+        <item>@string/file_age_3months</item>
+        <item>@string/file_age_6months</item>
+        <item>@string/file_age_1year</item>
+    </string-array>
 </resources>

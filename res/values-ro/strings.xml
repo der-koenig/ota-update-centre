@@ -84,4 +84,15 @@
     <string name="display_notifications">Arată notificări</string>
     <string name="notify_default">Notificările sunt activate.</string>
     <string name="notify_false">Notificările sunt dezactivate.</string>
+    <string name="file_action_install">Instalaţi</string>
+    <string name="file_action_rename">Redenumire</string>
+    <string name="file_action_delete">Ştergere</string>
+    <string name="install_option_wipe_data">Ştergere date</string>
+    <string name="install_option_wipe_cache">Ștergere Cache</string>
+    <string name="file_age_1week">1 săptămână</string>
+    <string name="file_age_2weeks">2 săptămâni</string>
+    <string name="file_age_1month">1 lună</string>
+    <string name="file_age_3months">3 luni</string>
+    <string name="file_age_6months">6 luni</string>
+    <string name="file_age_1year">1 an</string>
 </resources>

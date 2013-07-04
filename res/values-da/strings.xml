@@ -86,4 +86,15 @@
     <string name="display_notifications">Vis meddelelser</string>
     <string name="notify_default">Meddelelser er slået til.</string>
     <string name="notify_false">Meddelelser er slået fra.</string>
+    <string name="file_action_install">Installer</string>
+    <string name="file_action_rename">Omdøb</string>
+    <string name="file_action_delete">Slet</string>
+    <string name="install_option_wipe_data">Formater Data</string>
+    <string name="install_option_wipe_cache">Formater Cache</string>
+    <string name="file_age_1week">1 uge</string>
+    <string name="file_age_2weeks">2 uger</string>
+    <string name="file_age_1month">1 måned</string>
+    <string name="file_age_3months">3 måneder</string>
+    <string name="file_age_6months">6 måneder</string>
+    <string name="file_age_1year">1 år</string>
 </resources>

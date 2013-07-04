@@ -86,4 +86,15 @@
     <string name="display_notifications">सूचनाएँ दिखाएँ</string>
     <string name="notify_default">सूचनाओं चालू हैं.</string>
     <string name="notify_false">सूचनाएँ बंद हैं.</string>
+    <string name="file_action_install">लागू करो</string>
+    <string name="file_action_rename">नाम बदलें</string>
+    <string name="file_action_delete">हटा दो</string>
+    <string name="install_option_wipe_data">डेटा मिटाओ</string>
+    <string name="install_option_wipe_cache">मिटाओ</string>
+    <string name="file_age_1week">एक</string>
+    <string name="file_age_2weeks">दो सप्ताह</string>
+    <string name="file_age_1month">एक महीना</string>
+    <string name="file_age_3months">तीन महीने</string>
+    <string name="file_age_6months">छह महीने</string>
+    <string name="file_age_1year">एक साल</string>
 </resources>

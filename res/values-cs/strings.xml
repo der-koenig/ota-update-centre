@@ -86,4 +86,15 @@
     <string name="display_notifications">Zobrazovat upozornění</string>
     <string name="notify_default">Oznámení jsou zapnutá.</string>
     <string name="notify_false">Oznámení jsou vypnutá.</string>
+    <string name="file_action_install">Nainstalovat</string>
+    <string name="file_action_rename">Přejmenovat</string>
+    <string name="file_action_delete">Odstranit</string>
+    <string name="install_option_wipe_data">Vyčistit data</string>
+    <string name="install_option_wipe_cache">Vymazat cache</string>
+    <string name="file_age_1week">1 týden</string>
+    <string name="file_age_2weeks">2 týdny</string>
+    <string name="file_age_1month">1 měsíc</string>
+    <string name="file_age_3months">3 měsíce</string>
+    <string name="file_age_6months">6 měsíců</string>
+    <string name="file_age_1year">1 rok</string>
 </resources>

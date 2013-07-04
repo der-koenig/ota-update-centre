@@ -86,4 +86,15 @@
     <string name="display_notifications">Προβολή Ειδοποιήσεων</string>
     <string name="notify_default">Οι Ειδοποιήσεις είναι ενεργοποιημένες.</string>
     <string name="notify_false">Οι Ειδοποιήσεις είναι απενεργοποιημένες.</string>
+    <string name="file_action_install">Εγκατάσταση</string>
+    <string name="file_action_rename">Μετονομασία</string>
+    <string name="file_action_delete">Διαγραφή</string>
+    <string name="install_option_wipe_data">Εκκαθάριση Data</string>
+    <string name="install_option_wipe_cache">Εκκαθάριση Cache</string>
+    <string name="file_age_1week">1 εβδομάδας</string>
+    <string name="file_age_2weeks">2 εβδονάδων</string>
+    <string name="file_age_1month">1 μήνα</string>
+    <string name="file_age_3months">3 μηνών</string>
+    <string name="file_age_6months">6 μηνών</string>
+    <string name="file_age_1year">1 έτους</string>
 </resources>

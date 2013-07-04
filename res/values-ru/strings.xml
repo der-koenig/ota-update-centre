@@ -86,4 +86,15 @@
     <string name="display_notifications">Показать уведомления</string>
     <string name="notify_default">Уведомления отключены.</string>
     <string name="notify_false">Уведомления отключены.</string>
+    <string name="file_action_install">Установить</string>
+    <string name="file_action_rename">Переименовать</string>
+    <string name="file_action_delete">Удалить</string>
+    <string name="install_option_wipe_data">Очистить данные</string>
+    <string name="install_option_wipe_cache">Очистить кэш</string>
+    <string name="file_age_1week">1 неделя</string>
+    <string name="file_age_2weeks">2 недели</string>
+    <string name="file_age_1month">1 месяц</string>
+    <string name="file_age_3months">3 месяца</string>
+    <string name="file_age_6months">6 месяцев</string>
+    <string name="file_age_1year">1 год</string>
 </resources>

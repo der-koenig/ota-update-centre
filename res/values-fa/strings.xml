@@ -88,4 +88,15 @@
     <string name="display_notifications">نمایش گزارش ها</string>
     <string name="notify_default">گرازش ها روشن هستند.</string>
     <string name="notify_false">گرازش ها خاموش هستند.</string>
+    <string name="file_action_install">نصب</string>
+    <string name="file_action_rename">تغییر نام</string>
+    <string name="file_action_delete">حذف</string>
+    <string name="install_option_wipe_data">پاک کردن داده ها</string>
+    <string name="install_option_wipe_cache">پاک کردن حافظه پنهان</string>
+    <string name="file_age_1week">1 هفته</string>
+    <string name="file_age_2weeks">2 هفته</string>
+    <string name="file_age_1month">1 ماه</string>
+    <string name="file_age_3months">3 ماه</string>
+    <string name="file_age_6months">6 ماه</string>
+    <string name="file_age_1year">1 سال</string>
 </resources>

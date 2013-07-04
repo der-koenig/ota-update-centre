@@ -86,4 +86,15 @@
     <string name="display_notifications">Geef notificaties</string>
     <string name="notify_default">Notificaties zijn aan.</string>
     <string name="notify_false">Notificaties zijn uit.</string>
+    <string name="file_action_install">Installeer</string>
+    <string name="file_action_rename">Hernoem</string>
+    <string name="file_action_delete">Verwijder</string>
+    <string name="install_option_wipe_data">Verwijder Data</string>
+    <string name="install_option_wipe_cache">Verwijder Cache</string>
+    <string name="file_age_1week">1 week</string>
+    <string name="file_age_2weeks">2 weken</string>
+    <string name="file_age_1month">1 maand</string>
+    <string name="file_age_3months">3 maanden</string>
+    <string name="file_age_6months">6 maanden</string>
+    <string name="file_age_1year">1 jaar</string>
 </resources>

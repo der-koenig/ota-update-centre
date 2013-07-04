@@ -94,4 +94,15 @@
     <string name="display_notifications">הראה הודעות</string>
     <string name="notify_default">הודעות דלוקות.</string>
     <string name="notify_false">הודעות כבויות.</string>
+    <string name="file_action_install">התקן</string>
+    <string name="file_action_rename">שנה שם</string>
+    <string name="file_action_delete">מחק</string>
+    <string name="install_option_wipe_data">מחיקת נתונים</string>
+    <string name="install_option_wipe_cache">מחיקת קאש</string>
+    <string name="file_age_1week">שבוע</string>
+    <string name="file_age_2weeks">שבועיים</string>
+    <string name="file_age_1month">חודש</string>
+    <string name="file_age_3months">3 חודשים</string>
+    <string name="file_age_6months">6 חודשים</string>
+    <string name="file_age_1year">שנה</string>
 </resources>

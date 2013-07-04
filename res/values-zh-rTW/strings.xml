@@ -81,4 +81,15 @@
     <string name="display_notifications">顯示通知</string>
     <string name="notify_default">通知開啟。</string>
     <string name="notify_false">通知關閉。</string>
+    <string name="file_action_install">安裝</string>
+    <string name="file_action_rename">重新命名</string>
+    <string name="file_action_delete">刪除</string>
+    <string name="install_option_wipe_data">清除 Data 分區</string>
+    <string name="install_option_wipe_cache">清除 Cache 分區</string>
+    <string name="file_age_1week">1 周</string>
+    <string name="file_age_2weeks">2 周</string>
+    <string name="file_age_1month">1 月</string>
+    <string name="file_age_3months">3 月</string>
+    <string name="file_age_6months">6 月</string>
+    <string name="file_age_1year">1 年</string>
 </resources>
