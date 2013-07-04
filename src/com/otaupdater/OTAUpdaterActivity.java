@@ -578,7 +578,11 @@ public class OTAUpdaterActivity extends PreferenceActivity {
                     return 3;
                 }
 
-                if (lengthOfFile < 10000000) scale = 1024; //if less than 10 mb, scale using kb
+                dialog.setProgressNumberFormat("%1d/%2d MB");
+                if (lengthOfFile < 10000000) {
+                    scale = 1024; //if less than 10 mb, scale using kb
+                    dialog.setProgressNumberFormat("%1d/%2d kB");
+                }
                 publishProgress(0, lengthOfFile);
 
                 MessageDigest digest = MessageDigest.getInstance("MD5");
