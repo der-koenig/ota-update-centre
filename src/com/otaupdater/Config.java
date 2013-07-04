@@ -53,6 +53,7 @@ public class Config {
 
     private boolean showNotif = true;
     private boolean ignoredDataWarn = false;
+    private boolean bootCheckDone = false;
 
     private int lastVersion = -1;
     private String lastDevice = null;
@@ -72,6 +73,7 @@ public class Config {
 
         showNotif = PREFS.getBoolean("showNotif", showNotif);
         ignoredDataWarn = PREFS.getBoolean("ignoredDataWarn", ignoredDataWarn);
+        bootCheckDone = PREFS.getBoolean("bootCheckDone", bootCheckDone);
 
         lastVersion = PREFS.getInt("version", lastVersion);
         lastDevice = PREFS.getString("device", lastDevice);
@@ -129,6 +131,19 @@ public class Config {
         synchronized (PREFS) {
             SharedPreferences.Editor editor = PREFS.edit();
             editor.putBoolean("ignoredDataWarn", ignored);
+            editor.commit();
+        }
+    }
+
+    public boolean getBootCheckDone() {
+        return bootCheckDone;
+    }
+
+    public void setBootCheckDone(boolean checkDone) {
+        this.bootCheckDone = checkDone;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putBoolean("bootCheckDone", checkDone);
             editor.commit();
         }
     }

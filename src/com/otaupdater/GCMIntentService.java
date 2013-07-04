@@ -17,6 +17,9 @@
 package com.otaupdater;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -75,23 +78,28 @@ public class GCMIntentService extends GCMBaseIntentService {
         final WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, GCMIntentService.class.getName());
         wl.acquire();
 
-        new FetchRomInfoTask(context, new RomInfoListener() {
-            @Override
-            public void onStartLoading() { }
-            @Override
-            public void onLoaded(RomInfo info) {
-                if (info != null)
-                    fullUpdate.setIncrementalInfo(
-                            info.incrementalSourceVersion,
-                            info.incrementalUrl,
-                            info.incrementalMd5);
-                wl.release();
-            }
-            @Override
-            public void onError(String error) {
-                wl.release();
-            }
-        }, fullUpdate).execute();
+        try {
+            new FetchRomInfoTask(context, new RomInfoListener() {
+                @Override
+                public void onStartLoading() { }
+                @Override
+                public void onLoaded(RomInfo info) {
+                    if (info != null)
+                        fullUpdate.setIncrementalInfo(
+                                info.incrementalSourceVersion,
+                                info.incrementalUrl,
+                                info.incrementalMd5);
+                    wl.release();
+                }
+                @Override
+                public void onError(String error) {
+                    wl.release();
+                }
+            }, fullUpdate).execute().get(5000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ie) {
+        } catch (ExecutionException ee) {
+        } catch (TimeoutException te) {
+        }
     }
 
     @Override

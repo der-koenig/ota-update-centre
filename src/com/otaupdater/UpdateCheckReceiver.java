@@ -21,6 +21,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
@@ -32,6 +34,20 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         final Config cfg = Config.getInstance(context.getApplicationContext());
+        final String action = intent.getAction();
+
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+            cfg.setBootCheckDone(false);
+            cfg.clearStoredUpdate();
+            setAlarm(context);
+        }
+
+        if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+            boolean isConnected = !intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
+            if (cfg.getBootCheckDone() || !isConnected) {
+                return;
+            }
+        }
 
         if (cfg.hasStoredUpdate()) {
             RomInfo info = cfg.getStoredUpdate();
@@ -70,40 +86,38 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                     GCMRegistrar.register(context.getApplicationContext(), Config.GCM_SENDER_ID);
                     Log.v("OTA::GCMRegister", "GCM registered");
                 }
-            } else {
-                Log.v("OTA::Receiver", "No market, using pull method");
-                if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-                    setAlarm(context);
-                }
-
-                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                final WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, UpdateCheckReceiver.class.getName());
-                wl.acquire();
-
-                new FetchRomInfoTask(context, new RomInfoListener() {
-                    @Override
-                    public void onStartLoading() { }
-                    @Override
-                    public void onLoaded(RomInfo info) {
-                        if (Utils.isUpdate(info)) {
-                            cfg.storeUpdate(info);
-                            if (cfg.getShowNotif()) {
-                                Utils.showUpdateNotif(context, info);
-                            } else {
-                                Log.v("OTA::Receiver", "found update, notif not shown");
-                            }
-                        } else {
-                            cfg.clearStoredUpdate();
-                        }
-
-                        wl.release();
-                    }
-                    @Override
-                    public void onError(String error) {
-                        wl.release();
-                    }
-                }).execute();
             }
+
+            Log.v("OTA::Receiver", "Querying using pull method");
+    
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            final WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, UpdateCheckReceiver.class.getName());
+            wl.acquire();
+    
+            new FetchRomInfoTask(context, new RomInfoListener() {
+                @Override
+                public void onStartLoading() { }
+                @Override
+                public void onLoaded(RomInfo info) {
+                    cfg.setBootCheckDone(true);
+                    if (Utils.isUpdate(info)) {
+                        cfg.storeUpdate(info);
+                        if (cfg.getShowNotif()) {
+                            Utils.showUpdateNotif(context, info);
+                        } else {
+                            Log.v("OTA::Receiver", "found update, notif not shown");
+                        }
+                    } else {
+                        cfg.clearStoredUpdate();
+                    }
+    
+                    wl.release();
+                }
+                @Override
+                public void onError(String error) {
+                    wl.release();
+                }
+            }).execute();
         } else {
             Log.w("OTA::Receiver", "Unsupported ROM");
         }
