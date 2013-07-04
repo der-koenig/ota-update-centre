@@ -17,11 +17,11 @@
 
 <resources>
     <string name="notif_text_rom">Neues Update verfügbar</string>
-    <string name="notif_source">Systemupdate</string>
+    <string name="notif_source">Systemaktualisierung</string>
     <string name="alert_nodata_title">Keine Internetverbindung!</string>
-    <string name="alert_nodata_message">Keine Internetverbindung verfügbar\nBitte WLAN- oder mobile Datenverbindung herstellen, um nach Updates zu suchen.</string>
+    <string name="alert_nodata_message">Keine Internetverbindung verfügbar.\nBitte WLAN- oder mobile Datenverbindung herstellen, um nach Updates zu suchen.</string>
     <string name="alert_nowifi_title">Keine WLAN-Verbindung!</string>
-    <string name="alert_nowifi_message">Du benutzt eine mobiles Datenverbindung\nDiese App kann viel Traffic durch ROM-Updates verursachen.\nEs wird empfohlen die Updates per WLAN downzuloaden.</string>
+    <string name="alert_nowifi_message">Du benutzt eine mobile Datenverbindung.\nDiese App kann viel Traffic durch ROM-Updates verursachen.\nEs wird empfohlen die Updates per WLAN downzuloaden.</string>
     <string name="alert_wifi_settings">WLAN-Einstellungen</string>
     <string name="alert_ignore">Ignorieren</string>
     <string name="alert_exit">Verlassen</string>
@@ -34,11 +34,11 @@
     <string name="alert_install">Installieren</string>
     <string name="alert_install_message">Das Gerät startet im Recoverymodus neu um das Update zu installieren. Nach erfolgreicher Installation startet das Gerät automatisch neu.</string>
     <string name="alert_noinstall_message">ROMs müssen auf diesem Gerät manuell geflasht werden.\nBitte benutze die richtige Methode um das ROM zu installieren\n\nDie ZIP befindet sich hier: %1$s</string>
-    <string name="alert_update_title">ROM Update verfügbar!</string>
+    <string name="alert_update_title">ROM-Update verfügbar!</string>
     <string name="alert_download">Download</string>
     <string name="alert_downloading">Wird heruntergeladen&#8230;</string>
     <string name="alert_unsupported_title">Nicht unterstütztes ROM</string>
-    <string name="alert_unsupported_message">Der ROM-Entwickler unterstützt den ROM Updater leider nicht! Bitte fragen sie ihn freundlich ob er die App benutzen kann!\n\n(otaupdater.otaid-Wert leer oder fehlt)</string>
+    <string name="alert_unsupported_message">Der ROM-Entwickler unterstützt den Updater leider nicht! Bitte fragen sie ihn freundlich ob er die App benutzen kann!\n\n(otaupdater.otaid-Wert leer oder fehlt)</string>
     <string name="alert_update_to">Dieses Update aktualisiert dein ROM (%1$s) auf Version %2$s</string>
     <string name="alert_update_use_incremental">Inkrementelles Update durchführen</string>
     <string name="alert_prune_title">Dateien löschen, die älter sind als</string>
