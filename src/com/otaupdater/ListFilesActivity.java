@@ -19,16 +19,24 @@ package com.otaupdater;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+import android.os.OpenRecoverySystem;
+import android.os.OpenRecoverySystem.RecoveryAction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -199,6 +207,10 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
 
                     listFiles(Config.DL_PATH_FILE);
                     break;
+                case 3:
+                    VerificationTask verificationTask = new VerificationTask(file, ListFilesActivity.this);
+                    verificationTask.execute();
+                    break;
                 }
             }
         });
@@ -244,45 +256,26 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
                             try {
                                 String name = file.getName();
 
-                                Process p = Runtime.getRuntime().exec("su");
-                                DataOutputStream os = new DataOutputStream(p.getOutputStream());
-                                os.writeBytes("rm -f /cache/recovery/command\n");
-                                os.writeBytes("rm -f /cache/recovery/extendedcommand\n");
+                                OpenRecoverySystem.clearQueuedActions();
 
                                 if (selectedOpts[0]) {
-                                    os.writeBytes("echo '--nandroid' >> /cache/recovery/command\n");
+                                    OpenRecoverySystem.queueAction(RecoveryAction.backup());
                                 }
                                 if (selectedOpts[1]) {
-                                    os.writeBytes("echo '--wipe_data' >> /cache/recovery/command\n");
+                                    OpenRecoverySystem.queueAction(RecoveryAction.wipe(
+                                            EnumSet.of(RecoveryAction.WipeTarget.Data)));
                                 }
                                 if (selectedOpts[2]) {
-                                    os.writeBytes("echo '--wipe_cache' >> /cache/recovery/command\n");
+                                    OpenRecoverySystem.queueAction(RecoveryAction.wipe(
+                                            EnumSet.of(RecoveryAction.WipeTarget.Cache)));
                                 }
 
-                                os.writeBytes("echo '--update_package=/" + Utils.getRcvrySdPath() + "/OTA-Updater/download/" + name + "' >> /cache/recovery/command\n");
-                                try {
-                                    ((PowerManager) ctx.getSystemService(POWER_SERVICE)).reboot("recovery");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                OpenRecoverySystem.queueAction(RecoveryAction.installPackage(
+                                        "/" + Utils.getRcvrySdPath() + "/OTA-Updater/download/" + name));
 
-                                    os.writeBytes("sync\n");
-
-                                    String rebootCmd = Utils.getRebootCmd();
-                                    if (!rebootCmd.equals("$$NULL$$")) {
-                                        if (rebootCmd.endsWith(".sh")) {
-                                            os.writeBytes("sh " + rebootCmd + "\n");
-                                        } else {
-                                            os.writeBytes(rebootCmd + "\n");
-                                        }
-                                    }
-
-                                    os.writeBytes("sync\n");
-                                    os.writeBytes("exit\n");
-                                    os.flush();
-                                    p.waitFor();
-                                }
+                                ((PowerManager) ctx.getSystemService(POWER_SERVICE)).reboot("recovery");
                             } catch (Exception e2) {
-                                e.printStackTrace();
+                                e2.printStackTrace();
                             }
                         }
                     });
@@ -321,6 +314,135 @@ public class ListFilesActivity extends ListActivity implements AdapterView.OnIte
             Toast.makeText(getApplicationContext(), R.string.toast_prune, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), R.string.toast_prune_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class VerificationTask extends AsyncTask<File, Integer, Boolean> implements OpenRecoverySystem.ProgressListener {
+        private ProgressDialog dialog = null;
+
+        private Context ctx = null;
+        private final WakeLock wl;
+
+        private File packageFile;
+
+        private boolean done = false;
+        private String errorMessage = null;
+
+        public VerificationTask(File packageFile, ListActivity activity) {
+            this.ctx = activity;
+            this.packageFile = packageFile;
+
+            dialog = new ProgressDialog(ctx);
+
+            dialog.setTitle("Verifying package");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dialog.setCancelable(false);
+            dialog.setProgress(0);
+            dialog.setProgressNumberFormat(null);
+            dialog.setButton(Dialog.BUTTON_NEGATIVE, ctx.getString(R.string.alert_cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    VerificationTask.this.cancel(true);
+                }
+            });
+
+            PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
+            wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, OTAUpdaterActivity.class.getName());
+        }
+
+        @Override
+        public void onProgress(int progress) {
+            dialog.setProgress(progress);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            done = false;
+            dialog.show();
+            wl.acquire();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            done = true;
+            wl.release();
+            wl.acquire(Config.WAKE_TIMEOUT);
+
+            if (success) {
+                Toast.makeText(ctx, "Verification succeeded", Toast.LENGTH_LONG).show();
+            } else {
+                if (errorMessage != null) {
+                    Toast.makeText(ctx, "Verification failed: " + errorMessage, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ctx, "Verification failed", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        @Override
+        protected void onCancelled(Boolean success) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            done = true;
+            wl.release();
+            wl.acquire(Config.WAKE_TIMEOUT);
+
+            if (success) {
+                Toast.makeText(ctx, "Verification succeeded", Toast.LENGTH_LONG).show();
+            } else {
+                if (errorMessage != null) {
+                    Toast.makeText(ctx, "Verification failed: " + errorMessage, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ctx, "Verification failed", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        private class VerificationResult {
+            public boolean result = false;
+            public Throwable exception = null;
+        }
+
+        @Override
+        protected Boolean doInBackground(final File... params) {
+            final VerificationResult result = new VerificationResult();
+            try {
+                Thread verificationThread = new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            OpenRecoverySystem.verifyPackage(packageFile, VerificationTask.this, null);
+                            result.result = true;
+                        } catch (Exception e) {
+                            result.result = false;
+                            result.exception = e;
+                        }
+                    }
+                });
+                verificationThread.start();
+                while(verificationThread.isAlive()) {
+                    try {
+                        if (isCancelled())
+                            verificationThread.interrupt();
+                        Thread.sleep(100);
+                    } catch (Exception e1) {
+                        result.result = false;
+                        result.exception = e1;
+                    }
+                }
+                if (result.exception != null)
+                    errorMessage = result.exception.getMessage();
+                return result.result;
+            } catch (Exception e) {
+                Log.e("OTAUpdater", "Error verifying package", e);
+                errorMessage = e.getMessage();
+                return false;
+            }
         }
     }
 }
